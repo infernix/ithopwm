@@ -53,7 +53,12 @@ void setup() {
 
 void setup_wifi() {
 
+
+
   delay(10);
+  // First shut down AP
+  WiFi.enableAP(false);
+  WiFi.softAPdisconnect(true);
   // We start by connecting to a WiFi network
   Serial.println();
   Serial.print("Connecting to ");
