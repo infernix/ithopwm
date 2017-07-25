@@ -14,6 +14,8 @@
 #include "Arduino.h"
 #include <Syslog.h>
 #include "WiFiUdp.h"
+#include <ESP8266mDNS.h>
+#include <ArduinoOTA.h>
 
 extern "C" {
 #include "pwm.h"
@@ -62,6 +64,7 @@ void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   setup_wifi();
+  ArduinoOTA.begin();
 
   syslog.server(SYSLOG_SERVER, SYSLOG_PORT);
   syslog.deviceHostname(DEVICE_HOSTNAME);
@@ -75,6 +78,7 @@ void setup() {
   pinMode(BUILTIN_LED, OUTPUT);     // Initialize the BUILTIN_LED pin as a PWM
   pwm_init(pwm_period_init, pwm_duty_init, 2, io_info);
   pwm_start();
+
 }
 
 void setup_wifi() {
@@ -83,6 +87,9 @@ void setup_wifi() {
   // First shut down AP
   WiFi.enableAP(false);
   WiFi.softAPdisconnect(true);
+  // Set it to auto connect and reconnect
+  WiFi.setAutoConnect(true);
+  WiFi.setAutoReconnect(true);
   // We start by connecting to a WiFi network
   Serial.println();
   Serial.print("Connecting to ");
@@ -160,7 +167,12 @@ void reconnect() {
     }
   }
 }
+
+
+
+
 void loop() {
+  ArduinoOTA.handle();
   digitalWrite(D0, HIGH);
   if (!client.connected()) {
     reconnect();
