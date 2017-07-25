@@ -21,23 +21,8 @@ extern "C" {
 #include "pwm.h"
 }
 
-// Update these with values suitable for your network.
-// Syslog server connection info
-#define SYSLOG_SERVER "192.168.0.1"
-#define SYSLOG_PORT 514
-// This device info
-#define DEVICE_HOSTNAME "ithopwm"
-#define APP_NAME "controller"
-// Wifi
-const char* ssid = "YOUR_SSID_HERE";
-const char* password = "YOUR_WIFI_PASS_HERE";
-// MQTT
-const char* mqtt_server = "YOUR_MQTT_SERVER_IP_HERE";
-const char* mqtt_user = "YOUR_MQTT_USERNAME_HERE";
-const char* mqtt_password = "YOUR_MQTT_PASSWORD_HERE";
-const char* mqtt_client = "ithopwm";
-const char* mqtt_topic = "ithopwm/duty";
-
+// Copy config.h.example to config.h and update for your network
+#include "config.h"
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -71,7 +56,7 @@ void setup() {
   syslog.appName(APP_NAME);
   syslog.defaultPriority(LOG_DEBUG);
 
-  client.setServer(mqtt_server, 1883);
+  client.setServer(MQTT_SERVER, 1883);
   client.setCallback(callback);
 
   pinMode(12, OUTPUT);
@@ -93,9 +78,9 @@ void setup_wifi() {
   // We start by connecting to a WiFi network
   Serial.println();
   Serial.print("Connecting to ");
-  Serial.println(ssid);
+  Serial.println(WIFI_SSID);
 
-  WiFi.begin(ssid, password);
+  WiFi.begin(WIFI_SSID, WIFI_KEY);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -146,12 +131,12 @@ void reconnect() {
     Serial.print("Attempting MQTT connection...");
     syslog.log("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect(mqtt_client, mqtt_user, mqtt_password)) {
+    if (client.connect(MQTT_CLIENT, MQTT_USER, MQTT_PASSWORD)) {
       Serial.println("connected");
       syslog.log("connected to MQTT");
-      if (client.subscribe(mqtt_topic)) {
+      if (client.subscribe(MQTT_TOPIC)) {
         Serial.println("subscribed to topic");
-        syslog.logf("subscribed to topic %s", mqtt_topic);
+        syslog.logf("subscribed to topic %s", MQTT_TOPIC);
       } else {
         Serial.println("failed to subscribe, try again in 5 seconds");
         syslog.log("failed to subscribe to topic, retrying in 5 seconds");

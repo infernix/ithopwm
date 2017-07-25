@@ -1,0 +1,20 @@
+/ Update these with values suitable for your network.
+
+// Syslog server connection info
+#define SYSLOG_SERVER "192.168.0.1"
+#define SYSLOG_PORT 514
+
+// This device info; primarily for syslog
+#define DEVICE_HOSTNAME "ithopwm"
+#define APP_NAME "controller"
+
+// wifi
+#define WIFI_SSID "your_ssid_here"
+#define WIFI_KEY "your_wifi_key_here"
+
+// mqtt
+#define MQTT_SERVER "YOUR_MQTT_SERVER_IP_HERE"
+#define MQTT_USER "YOUR_MQTT_USERNAME_HERE"
+#define MQTT_PASSWORD "YOUR_MQTT_PASSWORD_HERE"
+#define MQTT_CLIENT "ithopwm"
+#define MQTT_TOPIC "ithopwm/duty"
