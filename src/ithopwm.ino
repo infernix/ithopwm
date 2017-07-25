@@ -80,7 +80,8 @@ void setup_wifi() {
   Serial.print("Connecting to ");
   Serial.println(WIFI_SSID);
 
-  WiFi.begin(WIFI_SSID, WIFI_KEY);
+  // https://github.com/esp8266/Arduino/issues/2186#
+  if (WiFi.status() != WL_CONNECTED) { WiFi.begin(WIFI_SSID, WIFI_KEY); }
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
